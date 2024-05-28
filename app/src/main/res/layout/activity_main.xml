@@ -5,26 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/baby_blue"
-    android:gravity="center"
-    android:orientation="horizontal"
-    tools:context=".MainActivity">
+    android:gravity="center"  tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/book_main_svg"
+        android:layout_width="311dp"
+        android:layout_height="305dp"
+        app:srcCompat="@drawable/main_book_purple_svg" />
 
     <TextView
         android:id="@+id/textViewMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:text="If you already have an account login, if not sign up!" />
+        android:layout_below="@id/book_main_svg"
+        android:layout_marginTop="100dp"  android:text="If you already have an account login, if not sign up!" />
 
     <LinearLayout
         android:id="@+id/linear_layout_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/textViewMessage"
-        android:layout_marginTop="50dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="50dp"  android:orientation="horizontal">
         <Button
             android:id="@+id/login_btn"
             android:layout_width="137dp"
