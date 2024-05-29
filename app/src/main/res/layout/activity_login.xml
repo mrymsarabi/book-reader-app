@@ -63,30 +63,6 @@
         android:padding="10dp"
         android:layout_marginBottom="20dp" />
 
-    <!-- User Type Radio Group -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User Type"
-        android:layout_marginLeft="4dp"
-        android:layout_marginBottom="4dp" />
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:orientation="horizontal">
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:text="Admin" />
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="User" />
-    </RadioGroup>
-
     <Button
         android:id="@+id/login_btn"
         android:layout_width="198dp"
