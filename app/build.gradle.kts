@@ -1,7 +1,7 @@
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
-    
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-kapt") // Apply the Kotlin annotation processing plugin
 }
 
 android {
@@ -36,7 +36,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
 }
 
 dependencies {
@@ -49,5 +48,29 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    val room_version = "2.6.1"
+
+    implementation("androidx.room:room-runtime:$room_version")
+
+    // Use only Kapt for annotation processing
+    kapt("androidx.room:room-compiler:$room_version")
+
+    // Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+
+    // RxJava2 support for Room
+    implementation("androidx.room:room-rxjava2:$room_version")
+
+    // RxJava3 support for Room
+    implementation("androidx.room:room-rxjava3:$room_version")
+
+    // Guava support for Room, including Optional and ListenableFuture
+    implementation("androidx.room:room-guava:$room_version")
+
+    // Test helpers
+    testImplementation("androidx.room:room-testing:$room_version")
+
+    // Paging 3 Integration
+    implementation("androidx.room:room-paging:$room_version")
 
 }
