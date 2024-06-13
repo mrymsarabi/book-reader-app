@@ -3,10 +3,7 @@ package com.example.bookreaderapp
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.bookreaderapp.activities.LoginActivity
 import com.example.bookreaderapp.activities.SignUpActivity
 
@@ -25,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         signupButton.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)  // This line was missing
         }
     }
 }
