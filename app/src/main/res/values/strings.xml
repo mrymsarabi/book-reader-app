@@ -11,5 +11,10 @@
     <string name="user">User</string>
     <string name="signup_end_text">If you already have an account, please login!</string>
     <string name="login_end_text">If you don\'t have an account, please sign up!</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="description">Description</string>
+    <string name="select_file">Select File</string>
+    <string name="upload_book">Upload Book</string>
 </resources>
 
