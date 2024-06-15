@@ -8,8 +8,11 @@ import androidx.room.Query
 @Dao
 interface FileDao {
     @Insert
-    suspend fun insertFile(file: File)
+    fun insert(file: File)
 
     @Query("SELECT * FROM files")
-    suspend fun getAllFiles(): List<File>
+    fun getAllBooks(): List<File>
+
+    @Query("SELECT * FROM files WHERE id = :id")
+    fun getBookById(id: Int): File?
 }

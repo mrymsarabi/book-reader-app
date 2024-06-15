@@ -9,12 +9,15 @@ data class File(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
-    @ColumnInfo(name = "file_name")
-    val fileName: String,
+    @ColumnInfo(name = "title")
+    val title: String,
+
+    @ColumnInfo(name = "author")
+    val author: String,
+
+    @ColumnInfo(name = "description")
+    val description: String,
 
     @ColumnInfo(name = "file_path")
     val filePath: String
-) {
-    // Dummy primary constructor parameter
-    constructor(dummy: Unit = Unit) : this(0, "", "")
-}
+)
