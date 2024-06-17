@@ -7,11 +7,15 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import com.example.bookreaderapp.R
 import com.example.bookreaderapp.data.AppDatabase
 import com.example.bookreaderapp.data.User
 import com.example.bookreaderapp.data.UserDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -21,11 +25,11 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
-        // Initialize the database and UserDao
+        // Initialize the database and UserDao with Room
         val db = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java, "app-database"
-        ).allowMainThreadQueries().build()
+        ).build()
         userDao = db.userDao()
 
         val signUpButton = findViewById<Button>(R.id.signup_btn)
@@ -60,19 +64,39 @@ class SignUpActivity : AppCompatActivity() {
         val selectedUserTypeId = userTypeRadioGroup.checkedRadioButtonId
         val userType = if (selectedUserTypeId == R.id.admin) "ADMIN" else "NORMAL_USER"
 
-        val user = User(firstName = firstName, lastName = lastName, username = username, password = password, role = userType)
-        userDao.insert(user)
+        // Use coroutine to perform database insertion in background thread
+        lifecycleScope.launch {
+            val user = User(firstName = firstName, lastName = lastName, username = username, password = password, role = userType)
 
-        // Verify insertion by querying the database
-        val insertedUser = userDao.checkUserExists(username)
-        if (insertedUser != null) {
-            Toast.makeText(this, "User registered successfully.", Toast.LENGTH_SHORT).show()
-            // Navigate to LoginActivity after successful registration
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
-        } else {
-            Toast.makeText(this, "Failed to register user.", Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.IO) {
+                try {
+                    userDao.insert(user)
+                } catch (e: Exception) {
+                    // Handle potential insertion errors (e.g., username conflict)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@SignUpActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                    return@withContext
+                }
+            }
+
+            // No need to check for user existence after successful insertion
+            withContext(Dispatchers.Main) {
+                showToast("User registered successfully.")
+                navigateToLogin()
+            }
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this@SignUpActivity, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        // Clear the back stack to prevent user from going back to SignUpActivity
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
     }
 }

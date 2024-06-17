@@ -6,10 +6,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import com.example.bookreaderapp.R
 import com.example.bookreaderapp.data.AppDatabase
 import com.example.bookreaderapp.data.UserDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
 
@@ -19,11 +23,13 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Initialize the database and UserDao
+        // Initialize the database and UserDao with migration
         val db = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java, "app-database"
-        ).allowMainThreadQueries().build()
+        ).addMigrations(AppDatabase.MIGRATION_1_2)
+            .build()
+
         userDao = db.userDao()
 
         val loginButton = findViewById<Button>(R.id.login_btn)
@@ -37,18 +43,36 @@ class LoginActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.password).text.toString().trim()
 
         if (username.isNotEmpty() && password.isNotEmpty()) {
-            val user = userDao.login(username, password)
-            if (user != null) {
-                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-                // Navigate to the main/home screen of the app
-//                val intent = Intent(this, MainActivity::class.java)
-//                startActivity(intent)
-//                finish()
-            } else {
-                Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val user = userDao.login(username, password)
+                    if (user != null) {
+                        showToast("Login successful!")
+                        navigateToBookList()
+                    } else {
+                        // More descriptive message for invalid credentials
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@LoginActivity, "Invalid login credentials.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         } else {
-            Toast.makeText(this, "Please enter both username and password", Toast.LENGTH_SHORT).show()
+            showToast("Please enter both username and password")
         }
+    }
+
+    private fun showToast(message: String) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun navigateToBookList() {
+        val intent = Intent(this, BookListActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

@@ -25,7 +25,8 @@
         <!-- Add the following lines to declare LoginActivity and SignUpActivity -->
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.SignUpActivity" />
-
+        <activity android:name=".activities.BookListActivity" />
+        <activity android:name=".activities.UploadBookActivity" />
     </application>
 
 </manifest>

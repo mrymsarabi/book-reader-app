@@ -18,10 +18,14 @@ class BookListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_books_list)
 
+        // Initialize Room database with migration
         val db = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java, "app-database"
-        ).allowMainThreadQueries().build()
+        )
+            .addMigrations(AppDatabase.MIGRATION_1_2) // Add your migration object here
+            .allowMainThreadQueries()
+            .build()
 
         val fileDao = db.fileDao()
         val files: List<File> = fileDao.getAllBooks() // Fetch data from database
