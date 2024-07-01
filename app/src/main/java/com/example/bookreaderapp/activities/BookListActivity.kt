@@ -15,27 +15,30 @@ import com.example.bookreaderapp.data.File
 
 class BookListActivity : AppCompatActivity() {
 
+    private lateinit var bookListAdapter: BookListAdapter
+    private lateinit var recyclerView: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_books_list)
 
-        // Initialize Room database with migration
+        recyclerView = findViewById(R.id.book_list_recyclerview)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        bookListAdapter = BookListAdapter(emptyList()) // Initially pass an empty list
+        recyclerView.adapter = bookListAdapter
+
         val db = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java, "app-database"
         )
-            .addMigrations(AppDatabase.MIGRATION_1_2) // Add your migration object here
+            .addMigrations(AppDatabase.MIGRATION_1_2)
             .allowMainThreadQueries()
             .build()
 
         val fileDao = db.fileDao()
-        val files: List<File> = fileDao.getAllBooks() // Fetch data from database
+        val files: List<File> = fileDao.getAllBooks()
+        bookListAdapter.updateBooks(files)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.book_list_recyclerview)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = BookListAdapter(files) // Bind data to RecyclerView
-
-        // Set up button click to navigate to UploadBookActivity
         val uploadBookButton = findViewById<Button>(R.id.upload_book_button)
         uploadBookButton.setOnClickListener {
             val intent = Intent(this, UploadBookActivity::class.java)

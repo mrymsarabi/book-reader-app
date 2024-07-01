@@ -1,5 +1,3 @@
-// UploadActivity.kt
-
 package com.example.bookreaderapp
 
 import android.app.Activity
@@ -7,12 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.bookreaderapp.activities.BookListActivity
 import com.example.bookreaderapp.data.AppDatabase
 import com.example.bookreaderapp.data.File
 import kotlinx.coroutines.Dispatchers
@@ -85,7 +83,6 @@ class UploadBookActivity : AppCompatActivity() {
 
         val filePath = getFilePath(selectedFileUri!!)
         saveFileInfoToDatabase(title, author, description, filePath)
-        Toast.makeText(this, "File Uploaded Successfully", Toast.LENGTH_SHORT).show()
     }
 
     private fun getFilePath(uri: Uri): String {
@@ -114,6 +111,17 @@ class UploadBookActivity : AppCompatActivity() {
             withContext(Dispatchers.IO) {
                 fileDao.insert(file)
             }
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@UploadBookActivity, "File Uploaded Successfully", Toast.LENGTH_SHORT).show()
+                navigateToBookList()
+            }
         }
+    }
+
+    private fun navigateToBookList() {
+        val intent = Intent(this@UploadBookActivity, BookListActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+        finish()
     }
 }
