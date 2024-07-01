@@ -34,7 +34,9 @@
             android:background="@drawable/text_background"
             android:padding="10dp"
             android:hint="@string/title"
-            android:layout_marginBottom="10dp"/>
+            android:autofillHints="autofill_hint_title"
+            android:layout_marginBottom="10dp"
+            android:inputType="text"/>
 
         <!-- Author -->
         <TextView
@@ -52,6 +54,8 @@
             android:background="@drawable/text_background"
             android:padding="10dp"
             android:hint="@string/author"
+            android:inputType="textPersonName"
+            android:autofillHints="autofill_hint_author"
             android:layout_marginBottom="10dp"/>
 
         <!-- Description -->
@@ -70,6 +74,7 @@
             android:background="@drawable/text_background"
             android:hint="@string/description"
             android:layout_marginBottom="10dp"
+            android:autofillHints="autofill_hint_description"
             android:inputType="textMultiLine"
             android:minLines="3"/>
 

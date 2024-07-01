@@ -26,7 +26,8 @@
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.BookListActivity" />
-        <activity android:name=".activities.UploadBookActivity" />
+        <activity android:name=".UploadBookActivity" />
+ <!--        <activity android:name=".activities" />-->
     </application>
 
 </manifest>
