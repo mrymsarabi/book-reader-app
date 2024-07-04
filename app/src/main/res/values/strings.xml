@@ -17,5 +17,12 @@
     <string name="select_file">Select File</string>
     <string name="upload_book">Upload Book</string>
     <string name="books_list">Books List</string>
+    <string name="name">Name:</string>
+    <string name="book_tile">Book Title</string>
+    <string name="author_title">Author:</string>
+    <string name="author_name">Author Name</string>
+    <string name="desc">Description:</string>
+    <string name="book_desc">Book Description</string>
+    <string name="download_icon">Download Box Icon</string>
 </resources>
 
