@@ -121,7 +121,7 @@ class UploadBookActivity : AppCompatActivity() {
     private fun navigateToBookList() {
         val intent = Intent(this@UploadBookActivity, BookListActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        startActivity(intent)
+        setResult(RESULT_OK, intent)
         finish()
     }
 }
