@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -35,6 +36,12 @@ class LoginActivity : AppCompatActivity() {
         val loginButton = findViewById<Button>(R.id.login_btn)
         loginButton.setOnClickListener {
             loginUser()
+        }
+
+        // Set OnClickListener for the TextView to navigate to SignUpActivity
+        val signUpTextView = findViewById<TextView>(R.id.login_end_text)
+        signUpTextView.setOnClickListener {
+            navigateToSignUp()
         }
     }
 
@@ -74,5 +81,10 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, BookListActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun navigateToSignUp() {
+        val intent = Intent(this, SignUpActivity::class.java)
+        startActivity(intent)
     }
 }
