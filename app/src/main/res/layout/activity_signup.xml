@@ -140,8 +140,12 @@
         android:textSize="16sp"/>
 
     <TextView
+        android:id="@+id/signup_end_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:text="@string/signup_end_text" />
+        android:text="@string/signup_end_text"
+        android:textColor="@android:color/holo_blue_dark"
+        android:clickable="true"
+        android:focusable="true" />
 </LinearLayout>

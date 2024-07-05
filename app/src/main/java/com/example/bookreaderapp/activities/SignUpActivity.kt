@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -35,10 +36,16 @@ class SignUpActivity : AppCompatActivity() {
         val signUpButton = findViewById<Button>(R.id.signup_btn)
         signUpButton.setOnClickListener {
             if (validateInput()) {
-                insertUserIntoDatabase()
+                checkAndInsertUser()
             } else {
                 Toast.makeText(this, "Please fill out all fields correctly.", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        // Set OnClickListener for the TextView to navigate to LoginActivity
+        val loginTextView = findViewById<TextView>(R.id.signup_end_text)
+        loginTextView.setOnClickListener {
+            navigateToLogin()
         }
     }
 
@@ -53,7 +60,7 @@ class SignUpActivity : AppCompatActivity() {
                 userTypeRadioGroup.checkedRadioButtonId != -1
     }
 
-    private fun insertUserIntoDatabase() {
+    private fun checkAndInsertUser() {
         val firstName = findViewById<EditText>(R.id.first_name).text.toString().trim()
         val lastName = findViewById<EditText>(R.id.last_name).text.toString().trim()
         val username = findViewById<EditText>(R.id.username).text.toString().trim()
@@ -64,26 +71,27 @@ class SignUpActivity : AppCompatActivity() {
         val selectedUserTypeId = userTypeRadioGroup.checkedRadioButtonId
         val userType = if (selectedUserTypeId == R.id.admin) "ADMIN" else "NORMAL_USER"
 
-        // Use coroutine to perform database insertion in background thread
         lifecycleScope.launch {
-            val user = User(firstName = firstName, lastName = lastName, username = username, password = password, role = userType)
-
             withContext(Dispatchers.IO) {
-                try {
-                    userDao.insert(user)
-                } catch (e: Exception) {
-                    // Handle potential insertion errors (e.g., username conflict)
+                val existingUser = userDao.checkUserExists(username)
+                if (existingUser != null) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@SignUpActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        showToast("Username already exists. Please choose a different username.")
                     }
-                    return@withContext
+                } else {
+                    val user = User(firstName = firstName, lastName = lastName, username = username, password = password, role = userType)
+                    try {
+                        userDao.insert(user)
+                        withContext(Dispatchers.Main) {
+                            showToast("User registered successfully.")
+                            navigateToLogin()
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@SignUpActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
-            }
-
-            // No need to check for user existence after successful insertion
-            withContext(Dispatchers.Main) {
-                showToast("User registered successfully.")
-                navigateToLogin()
             }
         }
     }
@@ -94,7 +102,6 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun navigateToLogin() {
         val intent = Intent(this, LoginActivity::class.java)
-        // Clear the back stack to prevent user from going back to SignUpActivity
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         finish()
