@@ -1,5 +1,5 @@
+// BookListAdapter.kt
 package com.example.bookreaderapp.adapters
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bookreaderapp.R
 import com.example.bookreaderapp.data.File
 
-class BookListAdapter(private var books: List<File>) : RecyclerView.Adapter<BookListAdapter.BookViewHolder>() {
+class BookListAdapter(private var books: List<File>, private val listener: OnItemClickListener) : RecyclerView.Adapter<BookListAdapter.BookViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onItemClick(file: File)
+    }
 
     class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.book_title)
@@ -27,6 +31,10 @@ class BookListAdapter(private var books: List<File>) : RecyclerView.Adapter<Book
         holder.titleTextView.text = book.title
         holder.authorTextView.text = book.author
         holder.descriptionTextView.text = book.description
+
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(book)
+        }
     }
 
     override fun getItemCount() = books.size

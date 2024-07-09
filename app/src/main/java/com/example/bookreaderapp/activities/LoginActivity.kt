@@ -2,6 +2,7 @@ package com.example.bookreaderapp.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -54,10 +55,10 @@ class LoginActivity : AppCompatActivity() {
                 withContext(Dispatchers.IO) {
                     val user = userDao.login(username, password)
                     if (user != null) {
+                        Log.d("LoginActivity", "User logged in with role: ${user.role}")
                         showToast("Login successful!")
-                        navigateToBookList()
+                        navigateToBookList(user.role)  // Pass the role to the next activity
                     } else {
-                        // More descriptive message for invalid credentials
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@LoginActivity, "Invalid login credentials.", Toast.LENGTH_SHORT).show()
                         }
@@ -77,8 +78,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToBookList() {
+    private fun navigateToBookList(role: String) {
         val intent = Intent(this, BookListActivity::class.java)
+        intent.putExtra("USER_ROLE", role)
         startActivity(intent)
         finish()
     }
